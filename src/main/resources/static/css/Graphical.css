@@ -1,0 +1,36 @@
+/* 右 */
+.san_youa {
+    width: 0;
+    height: 0;
+    border-top: 7px  solid transparent;
+    border-left: 10px solid black;
+    border-bottom: 7px solid transparent;
+    transition: transform 0.5s;
+    -moz-transition: -moz-transform 0.5s;	/* Firefox 4 */
+    -webkit-transition: -webkit-transform 0.5s;	/* Safari 和 Chrome */
+    -o-transition: -o-transform 0.5s;	/* Opera */
+
+}
+.san_you {
+    width: 0;
+    height: 0;
+    border-top: 7px  solid transparent;
+    border-left: 10px solid black;
+    border-bottom: 7px solid transparent;
+    /*transition: transform 0.5s;*/
+    /*-moz-transition: -moz-transform 0.5s;	!* Firefox 4 *!*/
+    /*-webkit-transition: -webkit-transform 0.5s;	!* Safari 和 Chrome *!*/
+    /*-o-transition: -o-transform 0.5s;	!* Opera *!*/
+
+}
+.san_xia {
+    width: 0;
+    height: 0;
+    border-top: 10px  solid black;
+    border-left: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    /*transform: rotate(90deg);*/
+    /*-moz-transform: rotate(90deg);*/
+    /*-webkit-transform: rotate(90deg);*/
+    /*-o-transform: rotate(90deg);*/
+}
