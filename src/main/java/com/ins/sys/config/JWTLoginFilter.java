@@ -89,10 +89,6 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
-        System.out.println(sb.toString()+">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-=======
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
         JSONObject object = JSONObject.fromObject(sb.toString());
         String username = object.getString("username");
         String password = object.getString("password");

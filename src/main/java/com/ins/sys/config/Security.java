@@ -73,17 +73,13 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .failureHandler(failureHandler())
             .and().logout().permitAll().invalidateHttpSession(true)
             .deleteCookies("JSESSIONID").logoutSuccessHandler(logoutSuccessHandler())
-<<<<<<< HEAD
-            .and().rememberMe().tokenValiditySeconds(60*60*24*7)
-                .and()
-                .addFilter(new JWTLoginFilter(authenticationManager()))
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
-=======
             .and().rememberMe().tokenValiditySeconds(60*60*24*7);
 //                .and()
 //                .addFilter(new JWTLoginFilter(authenticationManager()))
 //                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
+//                .and()
+//                .addFilter(new JWTLoginFilter(authenticationManager()))
+//                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
 //            .and().sessionManagement().maximumSessions(20).expiredUrl("/login.ftl");
 //        http.addFilterAfter(new RoleFilter(),JWTAuthenticationFilter.class);
 //        http.addFilterBefore(new OptionFilter(),JWTAuthenticationFilter.class);
@@ -94,13 +90,10 @@ public class Security extends WebSecurityConfigurerAdapter {
         return new SavedRequestAwareAuthenticationSuccessHandler(){
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-<<<<<<< HEAD
             //                SysUserInfoEntity sysUserInfoEntity = (SysUserInfoEntity) authentication.getPrincipal();
                 logger.info("USER："+authentication.getPrincipal()+" LOGIN SUCCESS!");
-=======
-                SysUserInfoEntity sysUserInfoEntity = (SysUserInfoEntity) authentication.getPrincipal();
-                logger.info("USER："+sysUserInfoEntity.getUserAccount()+" LOGIN SUCCESS!");
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
+
+
                 super.onAuthenticationSuccess(request,response,authentication);
             }
         };

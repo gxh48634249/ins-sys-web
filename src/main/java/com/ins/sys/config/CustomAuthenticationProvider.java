@@ -69,16 +69,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         //判断密码(这里是md5加密方式)是否正确
         String dbPassword = userDetails.getPassword();
-<<<<<<< HEAD
 //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 //        String encoderPassword = encoder.encode(password);
 
             if (!dbPassword.equals(password)) {
-=======
-        String encoderPassword = DigestUtils.md5DigestAsHex(password.getBytes());
-
-        if (!dbPassword.equals(encoderPassword)) {
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
+//=======
+//        String encoderPassword = DigestUtils.md5DigestAsHex(password.getBytes());
+//
+//        if (!dbPassword.equals(encoderPassword)) {
             throw new AuthenException("密码错误");
         }
 
@@ -86,11 +84,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // 还可以从数据库中查出该用户所拥有的权限,设置到 authorities 中去,这里模拟数据库查询.
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
         System.out.print(JSONArray.fromObject(userDetails.getAuthorities()).toString());
-<<<<<<< HEAD
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, username, authorities);
-=======
-        Authentication auth = new UsernamePasswordAuthenticationToken(username, password, authorities);
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
 
         return auth;
 

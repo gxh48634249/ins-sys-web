@@ -28,10 +28,6 @@ public class ZHController extends BasicController<ZH> {
         QZH qzh = QZH.zH;
         JPAQuery<ZH> query = queryFactory.select(qzh).from(qzh)
                 .where(qzh.lpName.like(StringTool.sqlLike(address)));
-<<<<<<< HEAD
-
-=======
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
         return new Result(Constant.SUCCESS_STATUE,"查询成功",query.fetch());
     }
 

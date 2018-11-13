@@ -77,7 +77,7 @@ public class TokenServiceImpl extends BasicService<Token> implements TokenServic
             pageInfo.setPageSize(0);
             pageInfo.setPageNum(10);
         }
-        if(StringTool.isnull(token.getTokenUser())) {
+        if(!StringTool.isnull(token.getTokenUser())) {
             predicate = ExpressionUtils.and(predicate,qToken.tokenUser.like(StringTool.sqlLike(token.getTokenUser())));
         }
         Sort sort = new Sort(Sort.Direction.DESC,"create_time");

@@ -107,13 +107,9 @@ public class UserService implements UserDetailsService {
             organInfoEntities = queryFactory.select(qOrganInfoEntity).from(qOrganInfoEntity)
                     .leftJoin(qUserOrganRelEntity).on(qUserOrganRelEntity.organId.eq(qOrganInfoEntity.organId))
                     .where(qUserOrganRelEntity.userId.eq(sysUserInfoEntity.getUserId())).fetch();
-<<<<<<< HEAD
             if(!ListUtill.isnull(organInfoEntities)) {
                 sysUserInfoEntity.setOrganInfoEntity(organInfoEntities.get(0));
             }
-=======
-            sysUserInfoEntity.setOrganInfoEntity(organInfoEntities.get(0));
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
             return sysUserInfoEntity;
         }
     }

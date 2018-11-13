@@ -18,11 +18,7 @@ public class CrosConfiguration {
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-<<<<<<< HEAD
-        return new CorsFilt er(urlBasedCorsConfigurationSource);
-=======
         return new CorsFilter(urlBasedCorsConfigurationSource);
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
     }
 
 }

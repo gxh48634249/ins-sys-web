@@ -55,18 +55,6 @@
             <version>1.1.10</version>
         </dependency>
 
-<<<<<<< HEAD
-=======
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-        </dependency>
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -132,12 +120,6 @@
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.webjars/bootstrap -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>4.1.1</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.webjars/jquery -->
         <dependency>
             <groupId>org.webjars</groupId>
@@ -190,12 +172,6 @@
         <!--</dependency>-->
         <!-- https://mvnrepository.com/artifact/org.webjars.bower/bootstrap-treeview -->
         <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>bootstrap-treeview</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-<<<<<<< HEAD
-        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.3</version>
@@ -212,9 +188,6 @@
             <!--<version>4.4.1</version>-->
             <!--<scope>test</scope>-->
         <!--</dependency>-->
-
-=======
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
 
     </dependencies>
 

@@ -248,11 +248,7 @@ public class UserController {
         Integer userstatue = sysUserInfoEntity.getUserStatue();
         try{
             QSysUserInfoEntity qSysUserInfoEntity = QSysUserInfoEntity.sysUserInfoEntity;
-<<<<<<< HEAD
             if (null!=userstatue&&userstatue>-1) {
-=======
-            if (userstatue>-1) {
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
                 JPAQuery query = queryFactory.select(qSysUserInfoEntity).from(qSysUserInfoEntity)
                         .where(qSysUserInfoEntity.userName.like(StringTool.sqlLike(userName)).or(qSysUserInfoEntity.userAccount.like(StringTool.sqlLike(userName))).and(qSysUserInfoEntity.userStatue.eq(userstatue)))
                         .orderBy(qSysUserInfoEntity.createTime.asc())

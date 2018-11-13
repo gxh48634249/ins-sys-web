@@ -4,25 +4,24 @@ import com.ins.sys.esentity.domain.ENSRepository;
 import com.ins.sys.esentity.domain.ENSWeb;
 import com.ins.sys.esentity.domain.ESResoueceRepository;
 import com.ins.sys.esentity.domain.ESResource;
+import com.ins.sys.tools.Constant;
+import com.ins.sys.tools.Result;
 import com.ins.sys.tools.StringTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @Api(tags = "ES测试示例")
@@ -255,20 +254,26 @@ public class ESController {
 
     @RequestMapping("/ENS-WEB")
     @ApiOperation(value = "ENS-WEB单词查询/不分词",httpMethod = "POST")
-    public Object ENSWEB(String must){
+    public Object ENSWEB(String must,Integer num){
         try{
-            PageRequest request = PageRequest.of(0,20);
+            Integer  startNum= 20;
+            Sort sort = new Sort(Sort.Direction.DESC,"publish_time");
+            PageRequest request = PageRequest.of(num,startNum,sort);
             List<String> list = new ArrayList<>();
             Page<ENSWeb> resources = this.ensRepository.findENSWebByContent(must,request);
-            System.out.print("本次查询总条数为："+resources.getTotalElements()+"<<<<<<<<<<<<<<");
-            System.out.print(resources);
             resources.forEach(m->{
                 list.add(m.getId());
             });
             List<ENSWeb> list1 = new ArrayList<>();
-            String replace = "<span>"+must+"</span>";
+            List<String> musts = Arrays.asList(must.split(" "));
+            Map<String,String> map = new HashMap<>();
+            musts.forEach(item -> {
+                map.put(item,"<span>"+item+"</span>");
+            });
             this.ensRepository.findAllById(list).forEach(m -> {
-                m.setContent(m.getContent().replace(must,replace));
+                map.forEach((k,v) -> {
+                    m.setContent(m.getContent().replace(k,v));
+                });
                 list1.add(m);
             });
             return list1;
@@ -277,5 +282,65 @@ public class ESController {
             return null;
         }
     }
+
+    @RequestMapping("/ENS-YHF")
+    @ApiOperation(value = "ENS-WEB单词查询/不分词",httpMethod = "POST")
+    public Object ENSYHF(String must,String containing,Integer num){
+        try{
+            Integer  startNum= 20;
+            Sort sort = new Sort(Sort.Direction.DESC,"publish_time");
+            PageRequest request = PageRequest.of(num,startNum,sort);
+            List<String> list = new ArrayList<>();
+            Page<ENSWeb> resources = this.ensRepository.findENSWebByContentAndContentIsContaining(must,containing,request);
+            resources.forEach(m->{
+                list.add(m.getId());
+            });
+            List<ENSWeb> list1 = new ArrayList<>();
+            List<String> musts = Arrays.asList(must.split(" "));
+            List<String> containings = Arrays.asList(containing.split(" "));
+            Map<String,String> map = new HashMap<>();
+            musts.forEach(item -> {
+                if(!StringTool.isnull(item)) {
+                    map.put(item,"<span>"+item+"</span>");
+                }
+            });
+            containings.forEach(item -> {
+                if(!StringTool.isnull(item)) {
+                    map.put(item, "<span>"+item+"</span>");
+                }
+            });
+            this.ensRepository.findAllById(list).forEach(m -> {
+                map.forEach((k,v) -> {
+                    m.setContent(m.getContent().replace(k,v));
+                });
+                list1.add(m);
+            });
+            return list1;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+//    @Autowired
+//    private  SpecialService  specialService;
+//
+//    @RequestMapping("ENS-WEB-SPECIAL")
+//    @ApiOperation(value = "ENS-WEB-SPECIAL专题查询",httpMethod = "POST")
+//    public  Object  ENSWEBSPECIAL(String special_name,String special_id){
+//        System.out.print("special_name"+special_name);
+//        System.out.print("special_-----------id"+special_id);
+//        String special_content="";
+//        try {
+//            this.specialService.insert(special_id,special_name,special_content);
+//            return new Result(Constant.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return  new Result(Constant.SERVICE_ERROR);
+//        }
+//
+//
+//    }
+
 
 }

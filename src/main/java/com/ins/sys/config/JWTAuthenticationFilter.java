@@ -114,8 +114,5 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
     }
 
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 800df9e499a75354f348ab3a9bb120d65adbca08
+
