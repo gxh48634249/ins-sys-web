@@ -67,26 +67,24 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             }catch (Exception e) {
                 e.printStackTrace();
                 response.setStatus(403);
-                return;
-//                throw new ServletException("无访问权限");
+                throw new ServletException("无访问权限");
             }
         }else {
             response.setStatus(403);
-            return;
-//            throw new ServletException("无访问权限");
+            throw new ServletException("无访问权限");
         }
 
-//        UsernamePasswordAuthenticationToken authenticationToken = getAuthentication(token);
-//
-//        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//        //放行
-//        chain.doFilter(request, response);
+        UsernamePasswordAuthenticationToken authenticationToken = getAuthentication(token);
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        //放行
+        chain.doFilter(request, response);
     }
 
     /**
      * 解析token中的信息,并判断是否过期
      */
-    private UsernamePasswordAuthenticationToken getAuthentication(String token,TokenServiceImpl tokenService) {
+    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
 
 
         Claims claims = Jwts.parser().setSigningKey("ins-sign")

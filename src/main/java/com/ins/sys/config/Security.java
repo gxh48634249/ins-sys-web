@@ -67,22 +67,22 @@ public class Security extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors().and()
             .authorizeRequests()
-            .antMatchers(permitPath).permitAll()
-//                .anyRequest().authenticated()
+//            .antMatchers(permitPath).permitAll()
+                .anyRequest().authenticated()
             .and().formLogin().loginPage("/login").permitAll().successHandler(loginSuccessHandler())
                 .failureHandler(failureHandler())
             .and().logout().permitAll().invalidateHttpSession(true)
             .deleteCookies("JSESSIONID").logoutSuccessHandler(logoutSuccessHandler())
-            .and().rememberMe().tokenValiditySeconds(60*60*24*7);
-//                .and()
-//                .addFilter(new JWTLoginFilter(authenticationManager()))
-//                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
+            .and().rememberMe().tokenValiditySeconds(60*60*24*7)
+                .and()
+                .addFilter(new JWTLoginFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
 //                .and()
 //                .addFilter(new JWTLoginFilter(authenticationManager()))
 //                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
 //            .and().sessionManagement().maximumSessions(20).expiredUrl("/login.ftl");
-//        http.addFilterAfter(new RoleFilter(),JWTAuthenticationFilter.class);
-//        http.addFilterBefore(new OptionFilter(),JWTAuthenticationFilter.class);
+        http.addFilterAfter(new RoleFilter(),JWTAuthenticationFilter.class);
+        http.addFilterBefore(new OptionFilter(),JWTAuthenticationFilter.class);
     }
 
     @Bean
