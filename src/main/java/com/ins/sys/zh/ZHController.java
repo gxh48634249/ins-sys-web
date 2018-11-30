@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 @RestController
 @RequestMapping("zh")
 @Api(value = "土地决策平台", tags = "土地决策平台")
@@ -45,5 +49,20 @@ public class ZHController extends BasicController<ZH> {
         JPAQuery<Zk> query = queryFactory.select(qZk).from(qZk)
                 .where(qZk.id.like(StringTool.sqlLike(info)));
         return new Result(Constant.SUCCESS_STATUE,"查询成功",query.fetch());
+    }
+
+    public static void main(String[] arg){
+        try {
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+//            Date date = new Date(1543393433210L);
+//            Calendar calendar= Calendar.getInstance();
+//            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            System.out.println(dateFormat.format(calendar.getTime()));
+//            System.out.print(simpleDateFormat.format(date));
+            String id = "https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eosxplOGfzmXcxSmzODr348S8aaaEELIsAUoycUmzrZINgibZaLeOXicQAzibFQWaicPDQbvBeKD2YqZQ/132";
+            System.out.print(id.length());
+        }catch (Exception e){
+
+        }
     }
 }

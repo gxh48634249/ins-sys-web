@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("organ")
@@ -173,9 +175,10 @@ public class OrganController {
     public Result selectOrganUser(@RequestBody OrganUserWebEntity organUserWebEntity) {
         String organId = organUserWebEntity.getOrganId();
         String userName = organUserWebEntity.getUserName();
-        if(StringTool.isnull(organId)) {
-            return new Result(Constant.NULL_PARAM);
-        }
+        List<String> organIds = Arrays.asList(organId.split(","));
+//        if(StringTool.isnull(organId)) {
+//            return new Result(Constant.NULL_PARAM);
+//        }
         try {
             QOrganInfoEntity qOrganInfoEntity = QOrganInfoEntity.organInfoEntity;
             QSysUserInfoEntity qSysUserInfoEntity = QSysUserInfoEntity.sysUserInfoEntity;
@@ -183,10 +186,12 @@ public class OrganController {
             JPAQuery<SysUserInfoEntity> query = queryFactory.select(qSysUserInfoEntity)
                     .from(qSysUserInfoEntity)
                     .leftJoin(qUserOrganRelEntity).on(qSysUserInfoEntity.userId.eq(qUserOrganRelEntity.userId))
-                    .leftJoin(qOrganInfoEntity).on(qOrganInfoEntity.organId.eq(qUserOrganRelEntity.organId))
-                    .where(qOrganInfoEntity.organId.eq(organId));
+                    .leftJoin(qOrganInfoEntity).on(qOrganInfoEntity.organId.eq(qUserOrganRelEntity.organId));
+            if (!ListUtill.isnull(organIds)) {
+                query.where(qOrganInfoEntity.organId.in(organIds));
+            }
             if(!StringTool.isnull(userName)) {
-                query.where(qSysUserInfoEntity.userName.like(StringTool.sqlLike(userName)));
+                query.where(qSysUserInfoEntity.userName.like(StringTool.sqlLike(userName)).or(qSysUserInfoEntity.phone.like(StringTool.sqlLike(userName))));
             }
             query.orderBy(qSysUserInfoEntity.userName.desc());
             query.limit(organUserWebEntity.getPageInfo().getPageSize()).offset(organUserWebEntity.getPageInfo().getPageNum()*organUserWebEntity.getPageInfo().getPageSize());

@@ -19,10 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service(value = "tokenserviceimpl")
 public class TokenServiceImpl extends BasicService<Token> implements TokenService {
@@ -36,19 +33,20 @@ public class TokenServiceImpl extends BasicService<Token> implements TokenServic
     @Scheduled(fixedRate = 60000L)
     public void delete(){
         log.info("开始清理过期用户");
-        Long date = new Date().getTime();
-        Long last = date+30*60*1000;
-        Long unuse = date+24*60*60*1000;
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
         QToken qToken = QToken.token;
-        Long num = queryFactory.delete(qToken).where(qToken.lastTime.gt(last).or(qToken.createTime.gt(unuse))).execute();
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.add(Calendar.MINUTE, 30);
+        Long num = queryFactory.delete(qToken).where(qToken.lastTime.gt(calendar1.getTime().getTime()).or(qToken.createTime.gt(calendar.getTime().getTime()))).execute();
         log.info("本次共清理:  "+num+"条过期数据");
     }
 
     @Override
     public Token save(Token token) throws Exception {
-        token.setCreateTime(new Date().getTime());
+        token.setCreateTime(Calendar.getInstance().getTime().getTime());
         token.setId(MD5.id());
-        token.setLastTime(new Date().getTime());
+        token.setLastTime(Calendar.getInstance().getTime().getTime());
         return this.tokenRepository.save(token);
     }
 

@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -137,19 +138,20 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         WebApplicationContext cxt = WebApplicationContextUtils.getWebApplicationContext(sc);
         tokenService = (TokenServiceImpl) cxt.getBean("tokenserviceimpl");
         System.out.println(JSONObject.fromObject(authResult));
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 30);
         String token = Jwts.builder()
                 .setSubject(authResult.getCredentials().toString())
                 //有效期两小时
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 2 * 1000))
+                .setExpiration(calendar.getTime())
                 //采用什么算法是可以自己选择的，不一定非要采用HS512
                 .signWith(SignatureAlgorithm.HS384, "ins-sign")
                 .compact();
         Token tokens = new Token();
-        System.out.println(token);
-        System.out.println(token.length());
         tokens.setTokenInfo(token);
-        System.out.println(JSONObject.fromObject(authResult.getPrincipal()).toString().length());
         tokens.setTokenUser(JSONObject.fromObject(authResult.getPrincipal()).toString());
+        tokens.setCreateTime(new Date().getTime());
+        tokens.setLastTime(new Date().getTime());
         try{
             tokenService.save(tokens);
         }catch (Exception e){
