@@ -322,6 +322,25 @@ public class ESController {
         }
     }
 
+
+     //根据id查询
+     @RequestMapping("/ENS-ID")
+     @ApiOperation(value = "ENS-ID查询",httpMethod = "POST")
+     public Object ENSID(String must){
+
+         List<String> list = new ArrayList<>();
+
+         String[] splitAddress=must.split(" ");
+         for(int i=0;i<splitAddress.length;i++){
+             list.add(splitAddress[i]);
+         }
+         System.out.print(list);
+         return this.ensRepository.findAllById(list);
+
+     };
+
+
+
 //    @Autowired
 //    private  SpecialService  specialService;
 //
