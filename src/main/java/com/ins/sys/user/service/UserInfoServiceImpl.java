@@ -61,9 +61,9 @@ public class UserInfoServiceImpl implements UserInfoService{
         String weChat = userInfoEntity.getWechat();
         String idCard = userInfoEntity.getIdCard();
         String address = userInfoEntity.getAddress();
-        Integer statue = userInfoEntity.getUserStatue();
-        if(null==statue) {
-            userInfoEntity.setUserStatue(1);
+        String statue = userInfoEntity.getUserStatue();
+        if(StringTool.isnull(statue)) {
+            userInfoEntity.setUserStatue("UserStatue_1");
         }
         if(StringTool.isnull(account)||StringTool.isnull(pwd)||null==phone||phone.toString().length()<8) {
             return new Result(Constant.NULL_PARAM);
@@ -85,7 +85,7 @@ public class UserInfoServiceImpl implements UserInfoService{
                 userInfoEntity.setUserPwd(encoder.encode(pwd));
                 userInfoEntity.initParams();
                 if(null==userInfoEntity.getGender()){
-                    userInfoEntity.setGender(0);
+                    userInfoEntity.setGender("gender_1");
                 }
                 return new Result(Constant.SUCCESS_STATUE,"",this.userRepository.save(userInfoEntity));
             }else return new Result(Constant.FAIL_STATUE,"账户，邮箱，身份证号，微信，手机号已存在");
@@ -171,11 +171,11 @@ public class UserInfoServiceImpl implements UserInfoService{
         String weChat = userInfoEntity.getWechat();
         String idCard = userInfoEntity.getIdCard();
         String address = userInfoEntity.getAddress();
-        Integer statue = userInfoEntity.getUserStatue();
+        String statue = userInfoEntity.getUserStatue();
         Integer qq = userInfoEntity.getQq();
         Integer education = userInfoEntity.getEducation();
         Long birth = userInfoEntity.getBirth();
-        Integer gender = userInfoEntity.getGender();
+        String gender = userInfoEntity.getGender();
         Long expiredTime = userInfoEntity.getExpiredTime();
         QSysUserInfoEntity qSysUserInfoEntity = QSysUserInfoEntity.sysUserInfoEntity;
         Predicate predicate = qSysUserInfoEntity.userId.isNotNull();

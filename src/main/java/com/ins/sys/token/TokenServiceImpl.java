@@ -34,11 +34,11 @@ public class TokenServiceImpl extends BasicService<Token> implements TokenServic
     public void delete(){
         log.info("开始清理过期用户");
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 1);
+        calendar.add(Calendar.DATE, -1);
         QToken qToken = QToken.token;
         Calendar calendar1 = Calendar.getInstance();
-        calendar1.add(Calendar.MINUTE, 30);
-        Long num = queryFactory.delete(qToken).where(qToken.lastTime.gt(calendar1.getTime().getTime()).or(qToken.createTime.gt(calendar.getTime().getTime()))).execute();
+        calendar1.add(Calendar.MINUTE, -30);
+        Long num = queryFactory.delete(qToken).where(qToken.lastTime.lt(calendar1.getTime().getTime()).or(qToken.createTime.lt(calendar.getTime().getTime()))).execute();
         log.info("本次共清理:  "+num+"条过期数据");
     }
 
