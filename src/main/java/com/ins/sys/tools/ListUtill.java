@@ -15,7 +15,9 @@ public class ListUtill {
     public static String append(StringBuilder sb,String params,String param){
         List<String> perIds = Arrays.asList(params.split(","));
         perIds.forEach(s -> {
-            sb.append(StringTool.templateSql(param,s));
+            if (!StringTool.isnull(s)) {
+                sb.append(StringTool.templateSql(param,s));
+            }
         });
         return sb.substring(0,sb.length()-1);
     }

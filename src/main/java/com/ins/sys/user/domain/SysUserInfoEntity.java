@@ -55,7 +55,7 @@ public class SysUserInfoEntity implements UserDetails ,Serializable {
     private Long birth;
 
     @ApiModelProperty("性别")
-    private Integer gender;
+    private String gender;
 
     @ApiModelProperty("教育程度")
     private Integer education;
@@ -64,7 +64,7 @@ public class SysUserInfoEntity implements UserDetails ,Serializable {
     private Long createTime;
 
     @ApiModelProperty("用户状态1:正常/2:锁定/3：黑名单")
-    private Integer userStatue;
+    private String userStatue;
 
     @ApiModelProperty("过期时间")
     private Long expiredTime;
@@ -207,11 +207,11 @@ public class SysUserInfoEntity implements UserDetails ,Serializable {
 
     @Basic
     @Column(name = "gender")
-    public Integer getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -237,11 +237,11 @@ public class SysUserInfoEntity implements UserDetails ,Serializable {
 
     @Basic
     @Column(name = "user_statue")
-    public Integer getUserStatue() {
+    public String getUserStatue() {
         return userStatue;
     }
 
-    public void setUserStatue(Integer userStatue) {
+    public void setUserStatue(String userStatue) {
         this.userStatue = userStatue;
     }
 
@@ -326,7 +326,7 @@ public class SysUserInfoEntity implements UserDetails ,Serializable {
     @Transient
     @Override
     public boolean isAccountNonLocked() {
-        return this.userStatue!=2;
+        return !this.userStatue.equals("2");
     }
 
     @Transient
@@ -338,7 +338,7 @@ public class SysUserInfoEntity implements UserDetails ,Serializable {
     @Transient
     @Override
     public boolean isEnabled() {
-        return this.userStatue==1;
+        return this.userStatue.equals("1");
     }
 
     public void initParams(){

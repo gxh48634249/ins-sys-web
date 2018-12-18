@@ -1,5 +1,6 @@
 package com.ins.sys.user.service;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.ins.sys.organ.domain.OrganInfoEntity;
 import com.ins.sys.organ.domain.QOrganInfoEntity;
 import com.ins.sys.permission.domain.PermissionInfoEntity;
@@ -12,6 +13,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,12 +78,12 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("未查询到"+s+"相关信息");
         }else {
             SysUserInfoEntity sysUserInfoEntity = list.get(0);
-            logger.info("SELECT USER "+sysUserInfoEntity.getUserAccount());
+            logger.info("SELECT USER "+ sysUserInfoEntity.getUserId());
             List<PermissionInfoEntity> perList = new ArrayList<>();
             List<RoleInfoEntity> roleList = new ArrayList<>();
             perList = queryFactory.select(qPermissionInfoEntity)
                     .from(qPermissionInfoEntity)
-                    .leftJoin(qUserPermissionRelEntity).on(qPermissionInfoEntity.permissionId.eq(qUserPermissionRelEntity.permissionId))
+                    .leftJoin(qUserPermissionRelEntity).on(qPermissionInfoEntity.permissionCode.equalsIgnoreCase(qUserPermissionRelEntity.permissionId))
                     .where(qUserPermissionRelEntity.userId.eq(sysUserInfoEntity.getUserId())).fetch();
             roleList = queryFactory.select(qRoleInfoEntity)
                     .from(qRoleInfoEntity)

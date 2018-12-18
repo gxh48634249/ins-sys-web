@@ -44,7 +44,7 @@ public class UserController {
     public Result insertUser(@RequestBody UserWeb userWeb) {
         SysUserInfoEntity sysUserInfoEntity = userWeb.getUserInfoEntity();
         try{
-            sysUserInfoEntity.setUserStatue(2);
+            sysUserInfoEntity.setUserStatue("UserStatue_2");
             String account = sysUserInfoEntity.getUserAccount();
             Result result = userInfoService.insert(sysUserInfoEntity);
             sysUserInfoEntity = (SysUserInfoEntity) result.getData();
@@ -210,14 +210,14 @@ public class UserController {
     @Transactional
     @RequestMapping("lockOpertion")
     @ApiOperation(value = "用户锁定操作",httpMethod = "POST")
-    public Result lockOpertion(@RequestBody String userId,@RequestBody Integer statue) {
+    public Result lockOpertion(@RequestBody String userId,@RequestBody String statue) {
         if(StringTool.isnull(userId)) {
             return new Result(Constant.NULL_PARAM);
         }
         try{
-            Integer temp = 0;
-            if(null==statue) {
-                temp = 1;
+            String temp = "";
+            if(StringTool.isnull(statue)) {
+                temp = "UserStatue_1";
             }else {
                 temp = statue;
             }
@@ -245,10 +245,10 @@ public class UserController {
         if(StringTool.isnull(userName)) {
             userName = "";
         }
-        Integer userstatue = sysUserInfoEntity.getUserStatue();
+        String userstatue = sysUserInfoEntity.getUserStatue();
         try{
             QSysUserInfoEntity qSysUserInfoEntity = QSysUserInfoEntity.sysUserInfoEntity;
-            if (null!=userstatue&&userstatue>-1) {
+            if (!StringTool.isnull(userstatue)) {
                 JPAQuery query = queryFactory.select(qSysUserInfoEntity).from(qSysUserInfoEntity)
                         .where(qSysUserInfoEntity.userName.like(StringTool.sqlLike(userName)).or(qSysUserInfoEntity.userAccount.like(StringTool.sqlLike(userName))).and(qSysUserInfoEntity.userStatue.eq(userstatue)))
                         .orderBy(qSysUserInfoEntity.createTime.asc())
@@ -280,9 +280,9 @@ public class UserController {
         if(StringTool.isnull(userId)) {
             return new Result(Constant.NULL_PARAM);
         }
-        Integer userStatue = sysUserInfoEntity.getUserStatue();
-        if(userStatue==null){
-            userStatue = 1;
+        String userStatue = sysUserInfoEntity.getUserStatue();
+        if(StringTool.isnull(userStatue)){
+            userStatue = "UserStatue_1";
         }
         try{
             QSysUserInfoEntity qSysUserInfoEntity = QSysUserInfoEntity.sysUserInfoEntity;
@@ -301,10 +301,10 @@ public class UserController {
     @ApiOperation(value = "查询用户信息(包含机构)",httpMethod = "POST")
     public Result selectUserOrganInfo(@RequestBody UserWeb userWeb) {
         SysUserInfoEntity sysUserInfoEntity = userWeb.getUserInfoEntity()==null?new SysUserInfoEntity():userWeb.getUserInfoEntity();
-        Integer userStatue = sysUserInfoEntity.getUserStatue();
+        String userStatue = sysUserInfoEntity.getUserStatue();
         PageInfo pageInfo = userWeb.getPageInfo();
-        if(userStatue==null){
-            userStatue = 1;
+        if(StringTool.isnull(userStatue)){
+            userStatue = "UserStatue_1";
         }
         if(null==pageInfo){
             pageInfo = new PageInfo();

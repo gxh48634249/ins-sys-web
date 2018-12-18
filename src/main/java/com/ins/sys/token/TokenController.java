@@ -10,6 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 @RestController
 @RequestMapping("token")
 @Api(value = "登录用户管理", tags = "登录用户管理")
@@ -39,5 +43,18 @@ public class TokenController {
             e.printStackTrace();
             return new Result(Constant.SERVICE_ERROR);
         }
+    }
+
+    public static void main(String[] agrs) {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+        Date date = new Date(1544428097974L);
+        System.out.println(sf.format(date));
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
+        QToken qToken = QToken.token;
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.add(Calendar.MINUTE, -30);
+        System.out.println(calendar.getTime().getTime());
+        System.out.println(calendar1.getTime().getTime());
     }
 }

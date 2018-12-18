@@ -1,32 +1,22 @@
 package com.ins.sys;
 
-import com.ins.sys.tools.StringTool;
+import com.ins.sys.permission.domain.PermissionInfoEntity;
+import com.ins.sys.permission.web.PermissionController;
+import com.ins.sys.resource.domain.ResourceInfoEntity;
+import com.ins.sys.resource.web.ResourceController;
 import com.ins.sys.user.domain.SysUserInfoEntity;
 import com.ins.sys.user.web.UserController;
 import com.ins.sys.user.web.UserWeb;
-import net.sf.json.JSONObject;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,12 +25,20 @@ public class SysApplicationTests {
     @Autowired
     private UserController userController;
 
+    @Autowired
+    private ResourceController resourceController;
+
+    @Autowired
+    private PermissionController permissionController;
+
     @Test
     public void contextLoads() {
-//    @Test
-//    public void contextLoads() {
-        String userName = "gxh11";
-        String pwd = "admin";
+        createUser();
+    }
+
+    private void createUser() {
+        String userName = "admin";
+        String pwd = "gxh11";
         SysUserInfoEntity sysUserInfoEntity = new SysUserInfoEntity();
         sysUserInfoEntity.setUserPwd(pwd);
         sysUserInfoEntity.setUserAccount(userName);
@@ -49,10 +47,74 @@ public class SysApplicationTests {
         UserWeb userWeb = new UserWeb();
         userWeb.setUserInfoEntity(sysUserInfoEntity);
         userWeb.setOrganId("123");
+        String temps = createPro(createResource());
+        System.out.println(temps);
+        userWeb.setPermissionIds(temps);
         userController.insertUser(userWeb);
     }
 
+    private List<String> createResource() {
+        List<String> resource = resourceController.selectAllSysResource();
+        List<String> resulr = new ArrayList<>();
+        resource.forEach(item -> {
+            item = item.substring(1);
+            Integer index = item.indexOf("/");
+            String resourceT;
+            if(index>0) {
+                resourceT = item.substring(0,index);
+            } else {
+                resourceT = item;
+            }
 
+            ResourceInfoEntity resourceInfoEntity = new ResourceInfoEntity();
+            resourceInfoEntity.setCreateTime(new Date().getTime());
+            resourceInfoEntity.setResourceId(resourceT);
+            resourceInfoEntity.setResourceCode(resourceT);
+            resourceInfoEntity.setResourceDes("系统自动创建");
+            resourceInfoEntity.setResourcePath(item.replace("/",","));
+            resourceInfoEntity.setResourceParentCode("0");
+            resourceInfoEntity.setResourceType("model");
+            if (!resulr.contains(resourceT)) {
+                resulr.add(resourceT);
+            }
+            resourceController.insertResource(resourceInfoEntity);
+            List<String> chile = new ArrayList<>();
+            chile = Arrays.asList(item.split("/"));
+            for (int i = 0; i< chile.size(); i++) {
+                if (i > 0) {
+                    ResourceInfoEntity resourceInfoEntity1 = new ResourceInfoEntity();
+                    resourceInfoEntity1.setCreateTime(new Date().getTime());
+                    resourceInfoEntity1.setResourceId(chile.get(i));
+                    resourceInfoEntity1.setResourceCode(chile.get(i));
+                    resourceInfoEntity1.setResourceDes("系统自动创建");
+                    resourceInfoEntity1.setResourcePath(item.replace("/",","));
+                    resourceInfoEntity1.setResourceParentCode(chile.get(i-1));
+                    resourceInfoEntity1.setResourceType("function");
+                    System.out.println(""+i);
+                    if (!resulr.contains(chile.get(i))){
+                        resulr.add(chile.get(i));
+                    }
+                    resourceController.insertResource(resourceInfoEntity1);
+                }
+            }
+        });
+        return resulr;
+    }
+
+    private String createPro(List<String> pro) {
+        String result = "";
+        for(String temp : pro) {
+            PermissionInfoEntity permissionInfoEntity = new PermissionInfoEntity();
+            permissionInfoEntity.setPermissionId(temp);
+            permissionInfoEntity.setCreateTime(new Date().getTime());
+            permissionInfoEntity.setPermissionCode(temp);
+            permissionInfoEntity.setPermissionDesc("系统自动创建");
+            permissionInfoEntity.setResourceId(temp);
+            permissionController.insertPer(permissionInfoEntity);
+            result += (","+temp);
+        }
+        return result;
+    }
 
 
 }
