@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -107,11 +108,12 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         WebApplicationContext cxt = WebApplicationContextUtils.getWebApplicationContext(sc);
         userService = (UserService) cxt.getBean("userService");
         SysUserInfoEntity sysUserInfoEntity = userService.loadUserByUsername(username);
-        if(null!=sysUserInfoEntity) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+        if(null!=sysUserInfoEntity && encoder.matches(password,sysUserInfoEntity.getPassword())) {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(sysUserInfoEntity, sysUserInfoEntity.getUserId(), sysUserInfoEntity.getAuthorities());
             return authenticationToken;
         }else {
-            return null;
+            throw new AuthenException("密码错误");
         }
         //authenticate()接受一个token参数,返回一个完全经过身份验证的对象，包括证书.
         // 这里并没有对用户名密码进行验证,而是使用 AuthenticationProvider 提供的 authenticate 方法返回一个完全经过身份验证的对象，包括证书.

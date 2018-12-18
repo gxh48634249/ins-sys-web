@@ -33,9 +33,6 @@ public class RoleFilter implements Filter {
 
     private static Logger logger = LoggerFactory.getLogger(RoleFilter.class);
 
-    @Value("${functionPermission}")
-    boolean functionPermission;
-
     @Autowired
     private EhcacheService ehcacheService;
 
@@ -72,9 +69,7 @@ public class RoleFilter implements Filter {
                     pers.forEach(m->{
                         perCodes.add(m.getAuthority());
                     });
-                    if(!functionPermission) {
-                        resource = resource.subList(0,resource.size()-1);
-                    }
+                    resource = resource.subList(0,resource.size()-1);
                     flag = valudate(resource,perCodes);
                     logger.info("USER ["+sysUserInfoEntity.getUserAccount()+"] HAVE PERS:"+array);
                 }

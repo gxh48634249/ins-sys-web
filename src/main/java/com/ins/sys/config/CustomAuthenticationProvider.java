@@ -10,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.DigestUtils;
 
 import java.util.ArrayList;
 
@@ -23,11 +22,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private UserDetailsService userDetailsService;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
 
     public CustomAuthenticationProvider(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDetailsService = userDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+
     }
 
 
@@ -69,14 +68,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         //判断密码(这里是md5加密方式)是否正确
         String dbPassword = userDetails.getPassword();
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
-//        String encoderPassword = encoder.encode(password);
+        System.out.println(dbPassword);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
+        String encoderPassword = bCryptPasswordEncoder.encode(password);
+        System.out.println(password);
 
-            if (!dbPassword.equals(password)) {
-//=======
-//        String encoderPassword = DigestUtils.md5DigestAsHex(password.getBytes());
-//
-//        if (!dbPassword.equals(encoderPassword)) {
+        if (!encoder.matches(password,dbPassword)) {
             throw new AuthenException("密码错误");
         }
 

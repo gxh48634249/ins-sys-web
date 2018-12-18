@@ -3,14 +3,17 @@ package com.ins.sys.user.web;
 
 import com.ins.sys.organ.domain.QOrganInfoEntity;
 import com.ins.sys.tools.*;
-import com.ins.sys.user.domain.*;
+import com.ins.sys.user.domain.QSysUserInfoEntity;
+import com.ins.sys.user.domain.QUserOrganRelEntity;
+import com.ins.sys.user.domain.SysUserInfoEntity;
+import com.ins.sys.user.domain.UserOrganRelEntity;
 import com.ins.sys.user.service.UserInfoService;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -345,6 +348,15 @@ public class UserController {
             e.printStackTrace();
             return  new Result(Constant.SERVICE_ERROR);
         }
+    }
+
+    public static void main(String[] age){
+        BCryptPasswordEncoder encoder1 = new BCryptPasswordEncoder(8);
+        System.out.println(encoder1.encode("admin"));
+        System.out.println(encoder1.encode("admin"));
+        BCryptPasswordEncoder encoder2 = new BCryptPasswordEncoder(8);
+        System.out.println(encoder2.encode("admin"));
+        System.out.println(encoder2.matches("admin",encoder1.encode("admin")));
     }
 
 }

@@ -6,6 +6,7 @@ import com.ins.sys.user.domain.SysUserInfoEntity;
 import com.ins.sys.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,15 +37,13 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class Security extends WebSecurityConfigurerAdapter {
 
-    @Value("${permit.path}")
-    private String permitPath;
+    @Value("${security}")
+    private boolean security;
 
     public static Logger logger = LoggerFactory.getLogger(Security.class);
 
-    @Bean
-    UserService userService(){
-        return new UserService();
-    };
+    @Autowired
+    private UserService userService;
 
     @Bean
     BCryptPasswordEncoder passwordEncoder(){
@@ -53,7 +52,7 @@ public class Security extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(new CustomAuthenticationProvider(userService(),passwordEncoder()));
+        auth.authenticationProvider(new CustomAuthenticationProvider(userService,passwordEncoder()));
 //        auth.userDetailsService(userService()).passwordEncoder(passwordEncoder());
     }
 
@@ -67,22 +66,18 @@ public class Security extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors().and()
             .authorizeRequests()
-//            .antMatchers(permitPath).permitAll()
                 .anyRequest().authenticated()
             .and().formLogin().loginPage("/login").permitAll().successHandler(loginSuccessHandler())
                 .failureHandler(failureHandler())
             .and().logout().permitAll().invalidateHttpSession(true)
             .deleteCookies("JSESSIONID").logoutSuccessHandler(logoutSuccessHandler())
-            .and().rememberMe().tokenValiditySeconds(60*60*24*7)
-                .and()
-                .addFilter(new JWTLoginFilter(authenticationManager()))
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
-//                .and()
-//                .addFilter(new JWTLoginFilter(authenticationManager()))
-//                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
-//            .and().sessionManagement().maximumSessions(20).expiredUrl("/login.ftl");
-        http.addFilterAfter(new RoleFilter(),JWTAuthenticationFilter.class);
-        http.addFilterBefore(new OptionFilter(),JWTAuthenticationFilter.class);
+            .and().rememberMe().tokenValiditySeconds(60*60*24*7);
+        if(security) {
+            http.addFilter(new JWTLoginFilter(authenticationManager()));
+            http.addFilter(new JWTAuthenticationFilter(authenticationManager()));
+            http.addFilterAfter(new RoleFilter(),JWTAuthenticationFilter.class);
+            http.addFilterBefore(new OptionFilter(),JWTAuthenticationFilter.class);
+        }
     }
 
     @Bean
